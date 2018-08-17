@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=Ponto
+comment1.params=
+comment1.target=Ponto()
+comment2.params=x\ y
+comment2.target=Ponto(double,\ double)
+comment3.params=p
+comment3.target=Ponto(Ponto)
+comment4.params=
+comment4.target=double\ getx()
+comment5.params=
+comment5.target=double\ gety()
+comment6.params=p
+comment6.target=double\ calcularDistancia(Ponto)
+comment7.params=x\ y
+comment7.target=double\ calcularDistancia(double,\ double)
+numComments=8
