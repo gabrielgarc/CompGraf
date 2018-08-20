@@ -1,21 +1,36 @@
 package gui;
+import java.util.ArrayList;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import primitivos.CirculoGr;
 import primitivos.PontoGr;
 import primitivos.Reta;
+import primitivos.RetaGr;
 
 public class PontoComMouseGui  {
 	int indicePonto=1;
 	PontoGr pontoAnterior;
+	ColorPicker cores;
+	ComboBox listaFormas;
 
 	public PontoComMouseGui(Stage palco) {
 
@@ -28,9 +43,25 @@ public class PontoComMouseGui  {
 
 		// Painel para os componentes
 		BorderPane pane = new BorderPane();
-
+					
+		
+		ObservableList<Object> optionsFormas = 
+			    FXCollections.observableArrayList(
+			        "Reta",
+			        "Circulo"
+			    );	
+				
+		this.cores = new ColorPicker();
+		cores.setValue(Color.BLACK);
+		
+		
+		this.listaFormas = new ComboBox(optionsFormas);
+		this.listaFormas.setValue("Reta");
+		
+		
 		// componente para desenho
 		Canvas canvas = new Canvas(500, 500);
+		
 
 		// componente para desenhar graficos
 		
@@ -64,10 +95,21 @@ public class PontoComMouseGui  {
 
 		// atributos do painel
 		pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
-		pane.setCenter(canvas); // posiciona o componente de desenho
+		pane.setBorder(new Border(new BorderStroke(Color.BLACK, 
+	            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
+		pane.setCenter(canvas); // posiciona o componente de desenho
+		GridPane grid = new GridPane();
+		grid.add(cores,0,0);
+		grid.add(listaFormas, 1,0 );
+		pane.setTop(grid);
+		
+	
+		
+				
 		// cria e insere cena
 		Scene scene = new Scene(pane);
+		
 		palco.setScene(scene);
 		palco.show();	
 	}
@@ -87,14 +129,22 @@ public class PontoComMouseGui  {
 
 		// Cria um ponto
 		p = new PontoGr(x, y, cor, nome, diametro);
-
 		// Desenha o ponto
 		p.desenharPonto(g);		
 		
 		if(pontoAnterior != null)
 		{
-			Reta reta = new Reta(g);
-			reta.desenharReta(cor, pontoAnterior, p);
+			Color corSelecionada = this.cores.getValue();
+			
+			if(this.listaFormas.getValue() == "Reta") {
+				RetaGr r = new RetaGr(g);
+				r.desenharReta(corSelecionada, p, pontoAnterior);
+				
+			} else {
+				CirculoGr c = new CirculoGr(g);
+				c.desenharCirculo(corSelecionada, p, pontoAnterior);
+			}
+			
 			pontoAnterior = null;
 		}else {
 			pontoAnterior = p;	
